@@ -1,0 +1,551 @@
+body {
+	font: 16px 'Open Sans', sans-serif;
+	line-height: 18px;
+	position: relative;
+}
+
+body.bgAdmin {
+	background: #fdfdfd;
+}
+
+h2,h3 {
+	font-size: 22px;
+	line-height: 24px;
+	font-weight: 700;
+}
+
+strong {
+	font-weight: bold;
+}
+
+a, a:before, a:after
+{
+	color: #ffffff;
+ 	text-decoration: none;
+ 	-webkit-transition: all 300ms ease-out;
+ 	-moz-transition: all 300ms ease-out;
+ 	-ms-transition: all 300ms ease-out;
+ 	-o-transition: all 300ms ease-out;
+ 	transition: all 300ms ease-out;
+}
+
+a:hover, a:hover:before, a:hover:after
+{	
+	cursor: pointer;
+ 	-webkit-transition: all 300ms ease-out;
+ 	-moz-transition: all 300ms ease-out;
+ 	-ms-transition: all 300ms ease-out;
+ 	-o-transition: all 300ms ease-out;
+ 	transition: all 300ms ease-out;
+}
+
+span, span:before, span:after
+{
+ 	-webkit-transition: all 300ms ease-out;
+ 	-moz-transition: all 300ms ease-out;
+ 	-ms-transition: all 300ms ease-out;
+ 	-o-transition: all 300ms ease-out;
+ 	transition: all 300ms ease-out;
+}
+
+span:hover, span:hover:before, span:hover:after
+{	
+	cursor: pointer;
+ 	-webkit-transition: all 300ms ease-out;
+ 	-moz-transition: all 300ms ease-out;
+ 	-ms-transition: all 300ms ease-out;
+ 	-o-transition: all 300ms ease-out;
+ 	transition: all 300ms ease-out;
+}
+
+
+input, textarea
+{
+	width: 100%;
+	height: 37px;
+	font-size: 16px;
+	color: #343434;
+	background-color: rgba(255,255,255,0.60);
+	border: 1px solid #000;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-bottom: 14px;
+	margin-right: 0px;
+}
+
+
+element.style {
+}
+.u-box-sizing {
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.u-textCenter {
+    text-align: center;
+}
+
+input.error {
+    outline: 2px solid #f00;
+}
+
+textarea
+{
+	width: 550px;
+	height: 160px;
+	padding-top: 12px;
+}
+
+input[type="number"]
+{
+	width: 30px;
+    height: 24px;
+    padding-left: 14px;
+    padding-right: 0px;
+    text-align: center;
+    border: 1px solid #A6244A;
+    margin: 0px;
+    margin-bottom: 15px;
+}
+
+input:focus, textarea:focus, .inputSeleccionado
+{
+	outline: 0;
+	background: #fff;
+}
+
+input[type="radio"], input[type=checkbox] 
+{
+	display: none;
+    width: auto;
+    height: auto;
+} 
+
+input[type="checkbox"]
+{
+	width: auto;
+	height: auto;
+	margin: 0px;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+label.lbRadio
+{
+	font: 16px 'ralewaymedium';
+	padding-top: 7px;
+    padding-left: 36px;
+    position: relative;
+}
+
+label.lbRadio:before 
+{
+    display: inline-block;
+    content: "";
+    width: 14px;
+    height: 14px;
+    left: 0;
+    top: 6px;
+    background-color: rgba(255, 255, 255, 0);
+    border: 2px solid #f2f385;
+    vertical-align: top;
+    -webkit-border-radius: 100%;
+    -o-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    position: absolute;
+}
+
+input[type="submit"] {
+	width: 170px;
+  padding: 0px;
+  color: #fff;
+  background: #172a73;
+  margin: 0px;
+	margin-top: 20px;
+}
+
+label.lbRadio.lbRadioCalendar:before 
+{
+	border-color: #ecd695;
+}
+
+label.lbCheckbox
+{
+	color: #454545;
+	font: 16px 'montserratregular';
+	padding-left: 15px;
+	margin-top: 5px;
+	margin-bottom: 6px;
+	margin-left: 16px;
+	position: relative;
+}
+
+label.lbCheckbox:before 
+{
+    content: "";
+	display: inline-block;
+	width: 11px;
+    height: 12px;
+	left: 0;
+	top: 0px;
+	background-color: #ffffff;
+	border: 1px solid #808080;
+	vertical-align: top;
+	position: absolute;
+}
+
+input[type=radio]:checked + label.lbRadio:before 
+{
+	content: "\2022";
+	color: #f4f585;
+	background-color: #f4f585;
+    font-size: 18px;
+    text-align: center;
+	line-height: 10px;
+	-webkit-box-shadow: 0px 0px 14px rgba(244,245,133,0.90);
+	-moz-box-shadow: 0px 0px 14px rgba(244,245,133,0.90);
+	-o-box-shadow: 0px 0px 14px rgba(244,245,133,0.90);
+	-ms-box-shadow: 0px 0px 14px rgba(244,245,133,0.90);
+	box-shadow: 0px 0px 14px rgba(244,245,133,0.90);
+}
+
+
+input[type=radio]:checked + label.lbRadio.lbRadioCalendar:before  
+{
+	color: #ecd695;
+	background-color: #ecd695;
+}
+
+input[type=checkbox]:checked + label.lbCheckbox:before 
+{
+    content: "\2713";
+    font-size: 11px;
+    color: #1d0042;
+    text-align: center;
+    line-height: 12px;
+}
+
+
+select
+{
+	width: 100%;
+	height: 37px;
+	font-size: 16px;
+	color: #343434;
+	background-color: rgba(255,255,255,0.60);
+	border: 1px solid #000;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-bottom: 14px;
+	margin-right: 0px;
+}
+
+select.error {
+	outline: 2px solid #f00;
+}
+
+/******************************************************Placeholder******************************************************/
+
+::-webkit-input-placeholder
+{
+ 	color: #343434;
+}
+
+::-o-input-placeholder
+{
+ 	color: #343434;
+}
+
+::-ms-input-placeholder
+{
+ 	color: #343434;
+}
+
+:-moz-input-placeholder
+{
+ 	color: #343434;
+}
+
+::-moz-input-placeholder
+{
+ 	color: #343434;
+}
+
+/************************************************************************************/
+
+.Auth-Form {
+	width: 300px;
+	padding-top: 50px;
+}
+
+.Auth-Form.Login {
+	padding-top: 100px;
+}
+
+.Auth-Logo {
+	width: 180px;
+  height: 140px;
+  background: #ffffff url(../img/logo.jpg) center no-repeat;
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.Auth-Notificacion {
+	color: #fff;
+	font-weight: bold;
+	background: #b56779;
+	margin-bottom: 40px;
+	padding: 13px 5px;
+	border: 2px dashed #000;
+}
+
+.Auth-Notificacion.Guardado {
+	background: #4e846d;
+}
+
+.Auth-Notificacion.Ocultar {
+	display: none;
+}
+
+
+.Auth-Form.EditarCliente label {
+	margin-bottom: 10px;
+}
+
+/**************************************************************/
+
+header {
+	text-align: center;
+}
+
+.Menu {
+	display: inline-block;
+  width: 100%;
+  max-width: 1100px;
+  text-align: right;
+  padding-top: 30px;
+}
+
+.Menu ul li {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.Menu ul li a {
+	color: #000;
+  font-weight: 700;
+  margin-left: 30px;
+}
+
+.Menu ul li a:hover {
+	color: #0057cb;
+}
+
+/**************************************************************/
+
+.Admin {
+	text-align: center;
+}
+
+.Admin-Center {
+	display: inline-block;
+	width: 100%;
+	max-width: 1100px;
+}
+
+.Admin-Center.PagDetalle {
+	max-width: 700px;
+}
+
+.Admin-ContentBtnAgregar {
+	text-align: right;
+	margin-top: 20px;
+}
+
+.Admin-BtnAgregar{
+	color: #fff;
+  background: #00376b;
+  padding: 10px 15px;
+  padding-right: 35px;
+  position: relative;
+}
+
+.Admin-BtnAgregar:before {
+	content: "+";
+  font-size: 22px;
+  position: absolute;
+  top: 11px;
+  right: 11px;
+}
+
+.Admin-BtnAgregar:hover {
+	background: #006fd8;
+}
+
+.Admin-Title {
+	padding-top: 40px;
+}
+
+.Admin-Table {
+	width: 100%;
+	margin-top: 30px;
+}
+
+.Admin-Table thead {
+	color: #fff;
+	background: #128dff;
+}
+
+.Admin-Table thead tr th {
+	padding: 10px 0px;
+}
+
+.Admin-Table tbody tr td {
+	padding: 8px 0px;
+	border-bottom: 2px solid rgba(0,0,0,0.40);
+}
+
+.Admin-Table tbody tr td a {
+	color: #000;
+	margin-top: 2px;
+}
+
+.Admin-Table tbody tr td a:hover {
+	color: #128dff;
+}
+
+
+
+.Admin-TitleDetalle {
+	margin-bottom: 20px;
+}
+
+/**************************************************************/
+
+footer {
+	width: 100%;
+	color: #ffff;
+	font-size: 14px;
+	line-height: 16px;
+	background: rgba(0,0,0,0.70);
+	text-align: center;
+	padding: 16px 0px;
+	position: fixed;
+	bottom: 0px;
+}
+
+/*************************************************************/
+
+.Modal {
+	display: none;
+	width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  top: 0px;
+  left: 0px;
+	right: 0px;
+  z-index: 2;
+  box-sizing: border-box;
+	position: fixed;
+}
+
+.Modal-Center {
+	width: 100%;
+	max-width: 600px;
+  height: 560px;
+  color: #000;
+  background: #ffffff;
+  padding: 15px 40px;
+  position: relative;
+  top: 2%;
+}
+
+.Modal-Center p {
+	margin-bottom: 15px;
+}
+
+.Modal-Cerrar {
+	font-size: 18px;
+  line-height: 18px;
+  position: absolute;
+  top: 12px;
+	right: 15px;
+	z-index: 1;
+}
+
+.Modal-Cerrar:hover {
+    color: #fff;
+}
+
+.Modal-Title {
+	width: 100%;
+  color: #fff;
+  font-size: 17px;
+  line-height: 17px;
+  background: #128dff;
+  padding: 15px 0px;
+  margin-top: 20px;
+  position: absolute;
+  top: -21px;
+  left: 0px;
+  border-radius: 0.6em 0.6em 0em 0em;
+}
+
+.Modal-Form {
+	display: none;
+	margin-top: 50px;
+}
+
+progress {
+	width: 100%;
+	height: 20px;
+	margin-top: 80px;
+}
+
+.Admin-TxtDeposito {
+	color: #0084ff;
+	margin-top: 40px;
+  margin-bottom: 30px !important;
+}
+
+.Admin-DatosDeposito p {
+	margin-bottom: 10px !important;
+}
+
+.Admin-BtnDetalle {
+	width: 25px;
+	height: 17px;
+	background: url(../img/btnDetalle.png) no-repeat;
+	background-size: 100%;
+}
+
+.Admin-BtnCancelar {
+	width: 25px;
+	height: 17px;
+	background: url(../img/btnCancelar.png) no-repeat;
+	background-size: 100%;
+}
+
+.Admin-BtnEditar {
+	width: 23px;
+	height: 23px;
+	background: url(../img/btnEditar.png) no-repeat;
+	background-size: 100%;
+	margin-top: -2px !important;
+}
+
+.Modal.DetalleCliente .Admin-Table {
+	margin-top: 10px !important;
+}
+
+.Modal.DetalleCliente .Admin-TxtDeposito {
+	margin-bottom: 0px !important;
+}

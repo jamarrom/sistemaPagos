@@ -1,0 +1,30 @@
+@myapp=http://localhost
+
+
+
+###Lista de usuarios
+//GET {{myapp}}:3001
+
+
+###Agregar tipo de usuario
+# POST {{myapp}}:3001/typeUsers
+# Content-Type: application/json
+
+# {
+#    "typeuser":"administrador"
+# }
+
+
+# POST {{myapp}}:3001/users
+# Content-Type: application/json
+
+# {
+#     "name":"admin",
+#     "password":"admin",
+#     "email":"admin@xpectrelabs.co",
+#     "typeuser_id":1,
+#     "active":1
+# }
+
+GET {{myapp}}:3001/actualizarStatus
+

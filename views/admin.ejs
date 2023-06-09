@@ -1,0 +1,198 @@
+<!doctype html>
+<html class="no-js" lang="es">
+    <head>
+        <title>Admin-Sistema de pagos</title> 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1" />
+        <link rel="shortcut icon" href="../img/favicon.png">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../css/reset.css" />
+        <link rel="stylesheet" href="../css/utilidades.css" />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/animations.css" />
+        <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+        <script type="text/javascript" src="../js/sweetalert.min.js"></script>
+
+        <script type="text/javascript">
+          window.addEventListener("keyup",function(e){
+            if(e.keyCode==27) {
+              $(".Modal").fadeOut("slow");
+            }
+          });
+
+          function validar() {
+            setTimeout(()=> {
+              if(window.location=="http://localhost:3001/")
+                location.href ='/admin';
+            },1000)
+          }
+
+          function fnDetalle(cliente_id){
+            $('.Modal').css({'display':'block'});
+
+            $.ajax(
+            {
+              url: "http://localhost:3001/consultarIdCliente",
+              data	:{
+                cliente_id:cliente_id
+              },
+              type	: "POST",
+              dataType : "json",
+              success	: function(Respuesta)
+              {
+                console.log(Respuesta.cliente);
+                if(Respuesta.cliente!=null) {
+                  $("progress").css({"display":"none"});
+                  $(".Modal-Form").css({"display":"block"});
+
+                  const nombre = Respuesta.cliente.nombre+" "+Respuesta.cliente.apellidos;
+                  const fechaO = new Date(Respuesta.cliente.fecha).toISOString().substr(0,10);
+                  const fecha = fechaO.substr(8,2) + "/" + fechaO.substr(5,2)+ "/" + fechaO.substr(0,4);
+
+                  $(".Admin-TitleDetalle").html(nombre);
+                  $("#dtFecha").html(fecha);
+                  $("#dtTelefono").html(Respuesta.cliente.telefono);
+                  $("#dtEmail").html(Respuesta.cliente.email);
+
+                  let cadena = "";
+                  for(let j=0; j< Respuesta.cliente.ordenespagos.length; j++) {
+                    const fechaOrdenO = new Date(Respuesta.cliente.ordenespagos[j].fecha).toISOString().substr(0,10);
+                    const fechaOrden = fechaOrdenO.substr(8,2) + "/" + fechaOrdenO.substr(5,2)+ "/" + fechaOrdenO.substr(0,4);
+                    let fechaPagoOrden = "------";
+
+                    if(Respuesta.cliente.ordenespagos[j].fechapago!=null){
+                      const fechaPagoOrdenO = new Date(Respuesta.cliente.ordenespagos[j].fechapago).toISOString().substr(0,10);
+                      fechaPagoOrden = fechaPagoOrdenO.substr(8,2) + "/" + fechaPagoOrdenO.substr(5,2)+ "/" + fechaPagoOrdenO.substr(0,4);
+                    }
+
+                    cadena += "<tr>";
+                    cadena += "<td>"+Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Respuesta.cliente.ordenespagos[j].monto)+"</td>";
+                    cadena += "<td>"+Respuesta.cliente.ordenespagos[j].status.status+"</td>";
+                    cadena += "<td>"+fechaOrden+"</td>";
+                    cadena += "<td>"+fechaPagoOrden+"</åtd>";
+                    cadena += "</tr>";
+                  }
+
+                  $(".Modal-Form tbody").html(cadena);
+
+                }
+                else {
+                  console.log("");
+                }
+              },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+                }).fail( function( jqXHR, textStatus, errorThrown ) {
+                });
+
+          }
+        </script>
+    </head>
+    <body class="bgAdmin" onload="validar()">
+      <header>
+        <nav class="Menu">
+          <ul>
+            <li><a href="/admin">Clientes</a></li>
+            <li><a href="/admin/ordenes-de-pagos">Ordenes de pagos</a></li>
+            <li><a href="/admin/cerrar-sesion">Cerrar sesión</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <section class="Admin">
+        <article class="Admin-Center">
+          <h2 class="Admin-Title">
+            Lista de clientes
+          </h2>
+
+          <div class="Admin-ContentBtnAgregar">
+            <a href="/admin/alta-cliente" class="Admin-BtnAgregar">
+              Agregar cliente
+            </a>
+          </div>
+
+          <table class="Admin-Table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Teléfono</th>
+                <th>E-mail</th>
+                <th>Fecha alta</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% 
+                if(listClientes!=null)
+                listClientes.forEach(function(cliente) 
+              { 
+                let fechaO = new Date(cliente.fecha).toISOString().substr(0,10);
+                let fecha = fechaO.substr(8,2) + "/" + fechaO.substr(5,2)+ "/" + fechaO.substr(0,4);
+              %>
+              <tr>
+                <td><%= cliente.nombre %></td>
+                <td><%= cliente.apellidos %></td>
+                <td><%= cliente.telefono %></td>
+                <td><%= cliente.email %></td>
+                <td><%= fecha %></td>
+                <td><a onclick="fnDetalle(<%= cliente.cliente_id %>)" class="Admin-BtnDetalle u-inline-block"></a>
+                 <a href="admin/editar-cliente/<%= cliente.cliente_id %>" class="Admin-BtnEditar u-inline-block"></a></td>
+              </tr>
+              <% } ); %>
+            </tbody>
+          </table>
+        </article>
+      </section>
+
+
+      <footer>
+        <p>
+          Sistema de administrador de pagos
+        </p>
+      </footer>
+
+      <div id="Modal" class="Modal DetalleCliente u-positionAbsolute u-textCenter">
+        <div class="Modal-Center u-inline-block u-box-sizing u-redondeado--1 u-textLeft slideDown">
+            <span class="Modal-Cerrar" onclick="$('.Modal').fadeOut('slow');">X</span>
+
+            <h4 class="Modal-Title u-textCenter">Detalle del cliente</h4>
+
+            <!-- <progress> </progress> -->
+
+            <div style="display:block;" class="Modal-Form" name="form-contacto" id="form-contacto">
+
+              <div class="Admin-Detalle u-textLeft">
+                <h3 class="Admin-TitleDetalle">Juan Antonio Martinez Roman</h3>
+
+                <div class="u-textRight">
+                  <p><strong>Teléfono:</strong> <span id="dtTelefono">9931210466</span></p>
+                  <p><strong>E-mail:</strong> <span id="dtEmail">juanantonio.martinez2003@gmail.com</span></p>
+                  <p><strong>Fecha de alta:</strong> <span id="dtFecha">08/05/2023</span></p>
+                </div>
+
+                <div>
+                  <p class="Admin-TxtDeposito u-textCenter"><strong>Historial de Ordenes de pagos</strong></p>
+                  <div class="Admin-DatosDeposito u-textCenter">
+                    <table class="Admin-Table">
+                      <thead>
+                        <tr>
+                          <th>Monto</th>
+                          <th>Status</th>
+                          <th>Fecha de creación</th>
+                          <th>Fecha de deposito</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+        </div>
+      </div>
+
+    </body>
+</html>

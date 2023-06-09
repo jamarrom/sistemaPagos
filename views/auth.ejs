@@ -1,0 +1,35 @@
+<!doctype html>
+<html class="no-js" lang="es">
+    <head>
+        <title>Sistema de pagos</title> 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1" />
+        <link rel="shortcut icon" href="../img/favicon.png">
+        <link rel="stylesheet" href="../css/reset.css" />
+        <link rel="stylesheet" href="../css/utilidades.css" />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/animations.css" />
+    </head>
+    <body class="u-textCenter">
+      <form class="Auth-Form Login u-inline-block slideDown" action="/" method="post">
+
+        <% if(messageError) { %>
+          <p class="Auth-Notificacion">
+            <strong>Usuario o contraseña invalido.</strong>
+          </p>
+
+          <script type="text/javascript">
+            setTimeout(()=> {
+              const el = document.querySelector('.Auth-Notificacion');
+              el.classList.add('Ocultar');
+            },3000);
+          </script>
+        <% } %>
+
+
+        <input class="u-textCenter u-box-sizing" type="text" name="username" id="username" placeholder="Usuario" required>
+        <input class="u-textCenter u-box-sizing" type="password" name="password" id="password" placeholder="Contraseña" required>
+        <input type="submit" value="Entrar">
+      </form>
+    </body>
+</html>

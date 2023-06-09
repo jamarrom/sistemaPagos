@@ -1,0 +1,93 @@
+<!doctype html>
+<html class="no-js" lang="es">
+    <head>
+        <title>Admin-Sistema de pagos</title> 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1" />
+        <link rel="shortcut icon" href="../img/favicon.png">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../css/reset.css" />
+        <link rel="stylesheet" href="../css/utilidades.css" />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/animations.css" />
+        <script type="text/javascript">
+          function validarForm(){
+            var nom = document.getElementById("txtNombre");
+            var aps = document.getElementById("txtApellidos");
+            var tel = document.getElementById("txtTelefono");
+
+            if (validaVacio(nom) || validaVacio(aps) || validaVacio(tel)) //COMPRUEBA CAMPOS VACIO
+                return false;
+
+            return true;
+          }
+
+          function validaVacio(idCampo) {
+            let valor = idCampo.value;
+            valor = valor.replace("&nbsp;", "");
+            valor = valor == undefined ? "" : valor;
+
+            if (!valor || 0 === valor.trim().length) {
+                idCampo.classList.add('error');
+                return true;
+            }
+            else {
+                idCampo.classList.remove('error');
+                return false;
+            }
+          }
+        </script>
+    </head>
+    <body class="bgAdmin">
+      <header>
+        <nav class="Menu">
+          <ul>
+            <li><a href="/admin">Clientes</a></li>
+            <li><a href="/admin/ordenes-de-pagos">Ordenes de pagos</a></li>
+            <li><a href="/admin/cerrar-sesion">Cerrar sesión</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <section class="Admin">
+        <article class="Admin-Center">
+          <h2 class="Admin-Title">
+            Alta de cliente
+          </h2>
+
+
+          <form class="Auth-Form u-inline-block" action="/admin/alta-cliente" method="post" onsubmit="return validarForm()">
+
+            <% if(message) { %>
+              <% if(message=='Guardado') { %>
+                <p class="Auth-Notificacion Guardado">
+                  <strong>El cliente fue dado de alta.</strong>
+                </p>
+              <% } %>
+
+              <script type="text/javascript">
+                setTimeout(()=> {
+                  const el = document.querySelector('.Auth-Notificacion');
+                  el.classList.add('Ocultar');
+                },3000);
+              </script>
+            <% } %>
+
+            <input class="u-textCenter u-box-sizing" type="text" name="txtNombre" id="txtNombre" placeholder="Nombre" required>
+            <input class="u-textCenter u-box-sizing" type="text" name="txtApellidos" id="txtApellidos" placeholder="Apellidos" required>
+            <input class="u-textCenter u-box-sizing" type="email" name="txtEmail" id="txtEmail" placeholder="Email" required>
+            <input class="u-textCenter u-box-sizing" type="text" name="txtTelefono" id="txtTelefono" placeholder="Teléfono" required>
+            <input type="submit" value="Guardar">
+          </form>
+        </article>
+      </section>
+
+      <footer>
+        <p>
+          Sistema de administrador de pagos
+        </p>
+      </footer>
+    </body>
+</html>

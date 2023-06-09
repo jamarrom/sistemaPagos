@@ -1,0 +1,108 @@
+<!doctype html>
+<html class="no-js" lang="es">
+    <head>
+        <title>Editar orden de pago-Sistema de pagos</title> 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1" />
+        <link rel="shortcut icon" href="../../img/favicon.png">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/reset.css" />
+        <link rel="stylesheet" href="../../css/utilidades.css" />
+        <link rel="stylesheet" href="../../css/style.css" />
+        <link rel="stylesheet" href="../../css/animations.css" />
+        <script type="text/javascript">
+          function validarForm(){
+            var monto = document.getElementById("txtMonto");
+
+            if (validarSelect("stCliente") || validaVacio(monto))//COMPRUEBA CAMPOS VACIO
+                return false;
+
+            return true;
+          }
+
+          function validaVacio(idCampo) {
+            let valor = idCampo.value;
+            valor = valor.replace("&nbsp;", "");
+            valor = valor == undefined ? "" : valor;
+
+            if (!valor || 0 === valor.trim().length) {
+                idCampo.classList.add('error');
+                return true;
+            }
+            else {
+                idCampo.classList.remove('error');
+                return false;
+            }
+          }
+
+          function validarSelect(idSelect) {
+            const optForm = document.forms["formOrderPago"][idSelect];
+
+            if( optForm.selectedIndex == null || optForm.selectedIndex == 0 ) {
+              optForm.classList.add('error');
+              return true;
+            }
+
+            optForm.classList.remove('error');
+            return false;
+          }
+        </script>
+    </head>
+    <body class="bgAdmin">
+      <header>
+        <nav class="Menu">
+          <ul>
+            <li><a href="/admin">Clientes</a></li>
+            <li><a href="/admin/ordenes-de-pagos">Ordenes de pagos</a></li>
+            <li><a href="/admin/cerrar-sesion">Cerrar sesión</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <section class="Admin">
+        <article class="Admin-Center">
+          <h2 class="Admin-Title">
+            Editar orden de pago
+          </h2>
+
+          <form name="formOrderPago" id="formOrderPago" class="Auth-Form u-inline-block" method="post" onsubmit="return validarForm()">
+
+            <% if(message) { %>
+              <% if(message=='Guardado') { %>
+                <p class="Auth-Notificacion Guardado">
+                  <strong>Los datos de la orden de pago fueron actulizados.</strong>
+                </p>
+              <% } %>
+
+              <script type="text/javascript">
+                setTimeout(()=> {
+                  const el = document.querySelector('.Auth-Notificacion');
+                  el.classList.add('Ocultar');
+                },3000);
+              </script>
+            <% } %>
+
+            <select class="u-textCenter u-box-sizing" name="stCliente" id="stCliente" required>
+              <option value="">Seleccione el cliente</option>
+              <%
+                if(listClientes!=null)
+                listClientes.forEach(function(cliente)
+              {
+                let nombreCompleto = cliente.nombre + " " + cliente.apellidos;
+              %>
+              <option value="<%= cliente.cliente_id %>"  <%= ordenPago.cliente_id == cliente.cliente_id?'selected':''; %>><%= nombreCompleto %></option>
+              <% } ); %>
+            </select>
+            <input class="u-textCenter u-box-sizing" type="text" name="txtMonto" id="txtMonto" value="<%= ordenPago.monto %>" placeholder="Monto a pagar" required>
+            <input type="submit" value="Editar orden de pago">
+          </form>
+        </article>
+      </section>
+
+      <footer>
+        <p>
+          Sistema de administrador de pagos
+        </p>
+      </footer>
+    </body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html class="no-js" lang="es">
+    <head>
+        <title>Ordenes de pago-Sistema de pagos</title> 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1" />
+        <link rel="shortcut icon" href="../img/favicon.png">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../css/reset.css" />
+        <link rel="stylesheet" href="../css/utilidades.css" />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/animations.css" />
+
+        <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
+        <script type="text/javascript" src="../js/sweetalert.min.js"></script>
+        <script type="text/javascript">
+          window.addEventListener("keyup",function(e){
+            if(e.keyCode==27) {
+              $(".Modal").fadeOut("slow");
+            }
+          });
+
+          function fnDetalle(orden_pago_id){
+            $('.Modal').css({'display':'block'});
+
+            $.ajax(
+            {
+              url: "http://localhost:3001/consultarIdOrdenPago",
+              data	:{
+                orden_pago_id:orden_pago_id
+              },
+              type	: "POST",
+              dataType : "json",
+              success	: function(Respuesta)
+              {
+                if(Respuesta.ordenPago!=null) {
+                  $("progress").css({"display":"none"});
+                  $(".Modal-Form").css({"display":"block"});
+
+                  const nombre = Respuesta.ordenPago.clientes.nombre+" "+Respuesta.ordenPago.clientes.apellidos;
+                  const fechaO = new Date(Respuesta.ordenPago.fecha).toISOString().substr(0,10);
+                  const fecha = fechaO.substr(8,2) + "/" + fechaO.substr(5,2)+ "/" + fechaO.substr(0,4);
+                  let fechaPago = "El pago no se ha realizado.";
+
+                  if(Respuesta.ordenPago.status.status_id==3)
+                    fechaPago = "El pago ha sido cancelado.";
+
+                  if(Respuesta.ordenPago.fechapago!=null) {
+                    const fechaPagoO = new Date(Respuesta.ordenPago.fechapago).toISOString().substr(0,10);
+                    fechaPago = fechaPagoO.substr(8,2) + "/" + fechaPagoO.substr(5,2)+ "/" + fechaPagoO.substr(0,4);
+                  }
+
+                  $(".Admin-TitleDetalle").html(nombre);
+                  $("#dtStatus").html(Respuesta.ordenPago.status.status);
+                  $("#dtMonto").html(Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Respuesta.ordenPago.monto));
+                  $("#dtFecha").html(fecha);
+                  $("#dtTelefono").html(Respuesta.ordenPago.clientes.telefono);
+                  $("#dtEmail").html(Respuesta.ordenPago.clientes.email);
+
+                  $("#dtFechaDeposito").html(fechaPago);
+                  $("#dtCustomer").html(Respuesta.ordenPago.customer?Respuesta.ordenPago.customer:"------");
+                  $("#dtIdOpenPay").html(Respuesta.ordenPago.order_id?Respuesta.ordenPago.order_id:"------");
+                  $("#dtToken").html(Respuesta.ordenPago.openpay_id?Respuesta.ordenPago.openpay_id:"------");
+                }
+                else {
+                  console.log("");
+                }
+              },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+                }).fail( function( jqXHR, textStatus, errorThrown ) {
+                });
+          }
+
+
+          function fnCancelar(orden_pago_id,posi) {
+            swal({
+              title: "¿Desea cancelar está orden de pago?",
+              text: "",
+              buttons: ["No", "Si"],
+            }).then(function(value) {
+              if (value) {
+                $.ajax(
+                {
+                  url: "http://localhost:3001/cancelarOrdeDePago",
+                  data	:{
+                    orden_pago_id:orden_pago_id
+                  },
+                  type	: "POST",
+                  dataType : "json",
+                  success	: function(Respuesta)
+                  {
+                    $(".Admin-Table tr:nth-child("+posi+") td:nth-child(3)").html("------");
+                    $(".Admin-Table tr:nth-child("+posi+") td:nth-child(4)").html("Cancelado");
+                    $(".Admin-Table tr:nth-child("+posi+") .Admin-BtnCancelar").removeClass("u-inline-block")
+                    $(".Admin-Table tr:nth-child("+posi+") .Admin-BtnCancelar").css({"display":"none"})
+                  },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    }
+                    }).fail( function( jqXHR, textStatus, errorThrown ) {
+                    });
+              }
+              else {
+              }
+            });
+
+          }
+        </script>
+    </head>
+    <body class="bgAdmin">
+      <header>
+        <nav class="Menu">
+          <ul>
+            <li><a href="/admin">Clientes</a></li>
+            <li><a href="/admin/ordenes-de-pagos">Ordenes de pagos</a></li>
+            <li><a href="/admin/cerrar-sesion">Cerrar sesión</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <section class="Admin">
+        <article class="Admin-Center">
+          <h2 class="Admin-Title">
+            Lista de ordenes de pagos
+          </h2>
+
+          <div class="Admin-ContentBtnAgregar">
+            <a href="/admin/crear-orden-de-pago" class="Admin-BtnAgregar">
+              Crear orden de pago
+            </a>
+          </div>
+
+          <table class="Admin-Table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Monto</th>
+                <th>Url de orden de pago</th>
+                <th>Status</th>
+                <th>Fecha de creación</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% 
+                let j = 1;
+                if(listOrdenesPagos!=null)
+                listOrdenesPagos.forEach(function(ordenPago)
+              { 
+                let fechaO = new Date(ordenPago.fecha).toISOString().substr(0,10);
+                let fecha = fechaO.substr(8,2) + "/" + fechaO.substr(5,2)+ "/" + fechaO.substr(0,4);
+                let nombreCompleto = ordenPago.clientes.nombre + " "+ ordenPago.clientes.apellidos;
+                const url = "http://localhost/pagos/?ordenPago="+ordenPago.codigo_web;
+              %>
+              <tr>
+                <td><%= nombreCompleto %></td>
+                <td><%= Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(ordenPago.monto) %></td>
+                <td><% if(ordenPago.status_id==1) { %><a href="<%= url %> " target="_blank">Ver url de pago</a><% } else {%>---------<%}  %></td>
+                <td><%= ordenPago.status.status %></td>
+                <td><%= fecha %></td>
+                <td><a onclick="fnDetalle(<%= ordenPago.orden_pago_id %>)" class="Admin-BtnDetalle u-inline-block"></a>
+                  <% if(ordenPago.status_id==1) { %><a href="editar-orden-de-pago/<%= ordenPago.orden_pago_id %>" class="Admin-BtnEditar u-inline-block"></a>  <a onclick="fnCancelar(<%= ordenPago.orden_pago_id %>,<%= j %>)" class="Admin-BtnCancelar u-inline-block"></a><% } %></td>
+              </tr>
+              <% j++; } ); %>
+            </tbody>
+          </table>
+        </article>
+      </section>
+
+
+      <div id="Modal" class="Modal u-positionAbsolute u-textCenter">
+        <div class="Modal-Center u-inline-block u-box-sizing u-redondeado--1 u-textLeft slideDown">
+            <span class="Modal-Cerrar" onclick="$('.Modal').fadeOut('slow');">X</span>
+
+            <h4 class="Modal-Title u-textCenter">Detalle de la orden de pago</h4>
+
+            <progress> </progress>
+
+            <div class="Modal-Form" name="form-contacto" id="form-contacto">
+
+              <div class="Admin-Detalle u-textLeft">
+                <h3 class="Admin-TitleDetalle">Juan Antonio Martinez Roman</h3>
+
+                <div class="u-textRight">
+                  <p><strong>Status:</strong> <span id="dtStatus">En proceso</span></p>
+                  <p><strong>Monto:</strong> <span id="dtMonto">$500.00</span></p>
+                  <p><strong>Fecha de creación:</strong> <span id="dtFecha">08/05/2023</span></p>
+                </div>
+
+                <div>
+                  <p class="Admin-TxtDeposito"><strong>Datos del depósito:</strong></p>
+                  <div class="Admin-DatosDeposito">
+                    <p><strong>Fecha de depósito:</strong> <span id="dtFechaDeposito"></span></p>
+                    <p><strong>Customer:</strong> <span id="dtCustomer"></span></p>
+                    <p><strong>Id de orden de openpay:</strong> <span id="dtIdOpenPay"></span></p>
+                    <p><strong>Token:</strong> <span id="dtToken"></span></p>
+                  </div>
+                </div>
+
+                <div class="u-textRight">
+                  <p class="Admin-TxtDeposito"><strong>Datos del cliente:</strong></p>
+                  <div class="Admin-DatosDeposito">
+                    <p><strong>Teléfono:</strong> <span id="dtTelefono">9931210466</span></p>
+                    <p><strong>E-mail:</strong> <span id="dtEmail">juanantonio.martinez2003@gmail.com</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+      <footer>
+        <p>
+          Sistema de administrador de pagos
+        </p>
+      </footer>
+    </body>
+</html>
