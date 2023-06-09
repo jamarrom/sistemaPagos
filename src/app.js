@@ -479,6 +479,6 @@ async function findUser(email,password) {
 router.use(routerErrors);
 
 
-router.listen(3001, () => {
+router.listen(3000,() => {
   console.log("Aplicación ejecutandose ....");
 });
