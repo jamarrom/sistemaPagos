@@ -308,7 +308,7 @@ router.get("/consultarOrdenPago", async (req,res) => {
 
   res.json({ordenPago});
 });
-
+ 
 router.post("/actualizarStatus", async (req,res) => {
   const fecha = new Date().toISOString();
   const actualizarStatusOrdenPago = await prisma.ordenespagos.update({
