@@ -47,15 +47,21 @@ routerLogin.post("/", async (req,res, next) => {
           const body = { _id: user }
           const token = fn.generateAccessToken(jwt, body);
 
-          await fs.writeFile(
-            "fakeLocal.json",
-            JSON.stringify({"Authorization": `Bearer ${token}`}),
-            (err) => {
-              if(err) throw err
-            }
-          );
-          const listClientes = await prisma.clientes.findMany({});
-          res.render("admin",{listClientes});
+          localStorage.setItem("jwtLogin", `${token}`);
+
+          // await fs.writeFile(
+          //   "fakeLocal.json",
+          //   JSON.stringify({"Authorization": `Bearer ${token}`}),
+          //   (err) => {
+          //     if(err) throw err
+          //   }
+          // );
+          res.redirect("/admin");
+          //const listClientes = await prisma.clientes.findMany({});
+          //res.render("admin",{listClientes});
+          setTimeout(()=> {
+
+          },2000);
         })
       }
     }

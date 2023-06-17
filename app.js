@@ -1,19 +1,24 @@
 const express = require("express");
 const router = express();
+const http = require('http');
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-const fakeLocal = require('../fakeLocal.json');
+// const fakeLocal = require('./fakeLocal.json');
+
+var LocalStorage = require('node-localstorage').LocalStorage;
+  localStorage = new LocalStorage('./scratch');
+
 const JWTStrategy = require('passport-jwt').Strategy;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const Clie = require('../model/Clientes');
+const Clie = require('./model/Clientes');
 const cors = require('cors');
 var Openpay = require('openpay');
 var openpay = new Openpay('mc2lujsx0twl7jcqwbdr', 'sk_8a3c85f43aba4051b0df58b1625dcaea', false);
-const routerErrors = require('./router/errores-en-http.js');
-const routerLogin = require('./router/loginRouter.js');
+const routerErrors = require('./src/router/errores-en-http.js');
+const routerLogin = require('./src/router/loginRouter.js');
 require('dotenv').config();
 
 router.set('views', './views');
@@ -42,7 +47,8 @@ passport.use('login', new localStrategy({
 }));
 
 function getJwt() {
-  return fakeLocal.Authorization?.substring(7);
+  return localStorage.getItem("jwtLogin");
+  // return fakeLocal.Authorization?.substring(7);
 }
 
 passport.use(new JWTStrategy({
@@ -66,13 +72,15 @@ router.get('/admin',passport.authenticate('jwt', { failureRedirect : '/', sessio
 
 router.get('/admin/cerrar-sesion',passport.authenticate('jwt', { session: false }), async (req,res,next) => {
 
-  await fs.writeFile(
-    "fakeLocal.json",
-    JSON.stringify({ Authorization: ``}),
-    (err)=> {
-      if (err) throw err;
-    }
-  )
+  localStorage.setItem("jwtLogin", ``);
+
+  // await fs.writeFile(
+  //   "fakeLocal.json",
+  //   JSON.stringify({ Authorization: ``}),
+  //   (err)=> {
+  //     if (err) throw err;
+  //   }
+  // )
   res.redirect("/");
 });
 
@@ -457,7 +465,7 @@ router.post("/validarPago", async (req,res) => {
 });
 
 function generateAccessToken(user) {
-  return jwt.sign(user,process.env.SECRET, {expiresIn: '24h'});
+  return jwt.sign(user,process.env.SECRET, {expiresIn: 86400});
 }
 
 async function findUser(email,password) {
@@ -479,6 +487,12 @@ async function findUser(email,password) {
 router.use(routerErrors);
 
 
-router.listen(3000,() => {
+
+
+// Servidor HTTP
+// const serverHttp = http.createServer(router);
+// serverHttp.listen(process.env.HTTP_PORT, process.env.IP);
+// serverHttp.on('listening', () => console.info(`Notes App running at http://${process.env.IP}:${process.env.HTTP_PORT}`));
+router.listen(3001, () => {
   console.log("Aplicación ejecutandose ....");
 });
