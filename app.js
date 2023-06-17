@@ -494,5 +494,5 @@ router.use(routerErrors);
 // serverHttp.listen(process.env.HTTP_PORT, process.env.IP);
 // serverHttp.on('listening', () => console.info(`Notes App running at http://${process.env.IP}:${process.env.HTTP_PORT}`));
 router.listen(3001, () => {
-  console.log("Aplicación ejecutandose ....");
+  console.log("Aplicación ejecutandose A ....");
 });
