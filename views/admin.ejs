@@ -16,6 +16,8 @@
         <script type="text/javascript" src="../js/sweetalert.min.js"></script>
 
         <script type="text/javascript">
+          let urlB = window.location.origin;
+
           window.addEventListener("keyup",function(e){
             if(e.keyCode==27) {
               $(".Modal").fadeOut("slow");
@@ -24,17 +26,17 @@
 
           function validar() {
             setTimeout(()=> {
-              if(window.location=="http://localhost:3001/")
+              if(window.location==(urlB+"/"))
                 location.href ='/admin';
             },1000)
           }
 
           function fnDetalle(cliente_id){
             $('.Modal').css({'display':'block'});
-
+ 
             $.ajax(
             {
-              url: "http://localhost:3001/consultarIdCliente",
+              url: urlB+"/consultarIdCliente",
               data	:{
                 cliente_id:cliente_id
               },
