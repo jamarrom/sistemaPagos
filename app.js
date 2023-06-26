@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express();
 const http = require('http');
+const https = require('https');
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
@@ -17,9 +18,13 @@ const Clie = require('./model/Clientes');
 const cors = require('cors');
 var Openpay = require('openpay');
 var openpay = new Openpay('mc2lujsx0twl7jcqwbdr', 'sk_8a3c85f43aba4051b0df58b1625dcaea', false);
+const conekta = require('conekta');
 const routerErrors = require('./src/router/errores-en-http.js');
 const routerLogin = require('./src/router/loginRouter.js');
 require('dotenv').config();
+
+conekta.api_key = 'key_murWAbLkhNI8NyyrG1Hs51g';
+conekta.locale = 'es';
 
 router.set('views', './views');
 router.set('view engine','ejs')
@@ -416,38 +421,64 @@ router.post("/cancelarOrdeDePago", async (req,res) => {
 router.post("/procesarOrdenOpenpay", async (req,res) => {
   const total = req.body.totalCompra;
 
-  var newCustomer = {
-    "name":req.body.txtNombre,
-    "email":req.body.txtEmail,
-    "last_name":req.body.txtApellidos,
-    "phone_number":'+52'+req.body.txtTelefono
-  };
-
-  var customerId = "";
-  openpay.customers.create(newCustomer, async function (error, body, response)
-  {
-    customerId = body.id;
-
-    var newCharge = {
-      "method": "card",
-      "source_id":req.body.source_id,
-      "amount" : total,
-      "currency": "MXN",
-      "description" : "Compra de: "+req.body.listaComprar,
-      "order_id": "pagos-"+req.body.source_id,
-      "device_session_id": req.body.device_session_id,
-      "redirect_url": "http://localhost/pagos/aviso.php",
-      "use_3d_secure": true,
-    };
-
-    openpay.customers.charges.create(
-      customerId,
-      newCharge,
-      function (error, body, response) {
-        res.json({ "texto":"Exito", "customer_id": customerId, "orde_id": body.order_id,"openpay_id": body.id, "url": body.payment_method.url  });
+  const order = await conekta.Order.create({
+    "currency": "MXN",
+    "customer_info": {
+      "name": req.body.txtNombre,
+      "phone":'+52'+req.body.txtTelefono,
+      "email": req.body.txtEmail
+    },
+    "line_items": [{
+      "name": req.body.listaComprar,
+      "unit_price": parseInt(total)*100,
+      "quantity": 1
+    }],
+    "charges": [{
+      "payment_method": {
+        "type": "card",
+        "token_id": req.body.txtKo
       }
-    );
+    }],
+      // function (error, body, response) {
+      //
+      // }
   });
+
+
+  res.json({ "texto":"Exito", "customer_id": "", "orde_id":order.toObject()['id'],"openpay_id": req.body.txtKo  });
+
+  // var newCustomer = {
+  //   "name":req.body.txtNombre,
+  //   "email":req.body.txtEmail,
+  //   "last_name":req.body.txtApellidos,
+  //   "phone_number":'+52'+req.body.txtTelefono
+  // };
+
+  // var customerId = "";
+  // openpay.customers.create(newCustomer, async function (error, body, response)
+  // {
+  //   customerId = body.id;
+
+  //   var newCharge = {
+  //     "method": "card",
+  //     "source_id":req.body.source_id,
+  //     "amount" : total,
+  //     "currency": "MXN",
+  //     "description" : "Compra de: "+req.body.listaComprar,
+  //     "order_id": "pagos-"+req.body.source_id,
+  //     "device_session_id": req.body.device_session_id,
+  //     "redirect_url": "http://localhost/pagos/aviso.php",
+  //     "use_3d_secure": true,
+  //   };
+
+  //   openpay.customers.charges.create(
+  //     customerId,
+  //     newCharge,
+  //     function (error, body, response) {
+  //       res.json({ "texto":"Exito", "customer_id": customerId, "orde_id": body.order_id,"openpay_id": body.id, "url": body.payment_method.url  });
+  //     }
+  //   );
+  // });
 });
 
 
@@ -465,7 +496,7 @@ router.post("/validarPago", async (req,res) => {
 });
 
 function generateAccessToken(user) {
-  return jwt.sign(user,process.env.SECRET, {expiresIn: 86400});
+  return jwt.sign(user,process.env.SECRET, {expiresIn: 60*60*24});
 }
 
 async function findUser(email,password) {
@@ -487,6 +518,11 @@ async function findUser(email,password) {
 router.use(routerErrors);
 
 
+let options = { cert: fs.readFileSync('certificados/certificate.crt'), ca: 
+  fs.readFileSync('./certificados/ca_bundle.crt'), key: 
+  fs.readFileSync('./certificados/private.key'),
+};
+
 
 
 // Servidor HTTP
@@ -494,5 +530,12 @@ router.use(routerErrors);
 // serverHttp.listen(process.env.HTTP_PORT, process.env.IP);
 // serverHttp.on('listening', () => console.info(`Notes App running at http://${process.env.IP}:${process.env.HTTP_PORT}`));
 router.listen(3001, () => {
-  console.log("Aplicación ejecutandose A ....");
+  console.log("Aplicación ejecutandose ....");
 });
+
+
+
+// Servidor HTTP
+// const httpsServer = https.createServer(options, router);
+// httpsServer.listen(443, process.env.IP);
+

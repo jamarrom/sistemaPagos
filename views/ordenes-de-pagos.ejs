@@ -16,6 +16,7 @@
         <script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
         <script type="text/javascript" src="../js/sweetalert.min.js"></script>
         <script type="text/javascript">
+          let urlB = window.location.origin;
           window.addEventListener("keyup",function(e){
             if(e.keyCode==27) {
               $(".Modal").fadeOut("slow");
@@ -27,7 +28,7 @@
 
             $.ajax(
             {
-              url: "http://localhost:3001/consultarIdOrdenPago",
+              url: urlB+"/consultarIdOrdenPago",
               data	:{
                 orden_pago_id:orden_pago_id
               },
@@ -83,7 +84,7 @@
               if (value) {
                 $.ajax(
                 {
-                  url: "http://localhost:3001/cancelarOrdeDePago",
+                  url: urlB+"/cancelarOrdeDePago",
                   data	:{
                     orden_pago_id:orden_pago_id
                   },
@@ -150,7 +151,7 @@
                 let fechaO = new Date(ordenPago.fecha).toISOString().substr(0,10);
                 let fecha = fechaO.substr(8,2) + "/" + fechaO.substr(5,2)+ "/" + fechaO.substr(0,4);
                 let nombreCompleto = ordenPago.clientes.nombre + " "+ ordenPago.clientes.apellidos;
-                const url = "http://localhost/pagos/?ordenPago="+ordenPago.codigo_web;
+                const url = "http://localhost/paginawebpagos/?ordenPago="+ordenPago.codigo_web;
               %>
               <tr>
                 <td><%= nombreCompleto %></td>
@@ -191,8 +192,8 @@
                   <p class="Admin-TxtDeposito"><strong>Datos del depósito:</strong></p>
                   <div class="Admin-DatosDeposito">
                     <p><strong>Fecha de depósito:</strong> <span id="dtFechaDeposito"></span></p>
-                    <p><strong>Customer:</strong> <span id="dtCustomer"></span></p>
-                    <p><strong>Id de orden de openpay:</strong> <span id="dtIdOpenPay"></span></p>
+                    <!-- <p><strong>Customer:</strong> <span id="dtCustomer"></span></p> -->
+                    <p><strong>Id de orden de conekta:</strong> <span id="dtIdOpenPay"></span></p>
                     <p><strong>Token:</strong> <span id="dtToken"></span></p>
                   </div>
                 </div>

@@ -1,2 +1,5 @@
 
 # Keep environment variables out of version control
+
+# Ignora los archivos relacionados a API keys
+.env
