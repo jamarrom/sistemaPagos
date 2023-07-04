@@ -151,7 +151,7 @@
                 let fechaO = new Date(ordenPago.fecha).toISOString().substr(0,10);
                 let fecha = fechaO.substr(8,2) + "/" + fechaO.substr(5,2)+ "/" + fechaO.substr(0,4);
                 let nombreCompleto = ordenPago.clientes.nombre + " "+ ordenPago.clientes.apellidos;
-                const url = "http://localhost/paginawebpagos/?ordenPago="+ordenPago.codigo_web;
+                const url = "https://www.bioesensi-crm.com/?ordenPago="+ordenPago.codigo_web;
               %>
               <tr>
                 <td><%= nombreCompleto %></td>

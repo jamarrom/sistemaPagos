@@ -40,6 +40,7 @@ passport.use('login', new localStrategy({
 }, async(username,password, done) => {
   try{
     let user = await findUser(username,password);
+console.log(user);
 
     if(user)
       return done(null,user,{message:'Logueado'});
@@ -524,18 +525,13 @@ let options = { cert: fs.readFileSync('certificados/certificate.crt'), ca:
 };
 
 
-
 // Servidor HTTP
 // const serverHttp = http.createServer(router);
 // serverHttp.listen(process.env.HTTP_PORT, process.env.IP);
 // serverHttp.on('listening', () => console.info(`Notes App running at http://${process.env.IP}:${process.env.HTTP_PORT}`));
-router.listen(3001, () => {
-  console.log("Aplicación ejecutandose ....");
-});
-
 
 
 // Servidor HTTP
-// const httpsServer = https.createServer(options, router);
-// httpsServer.listen(443, process.env.IP);
+const httpsServer = https.createServer(options, router);
+httpsServer.listen(443, process.env.IP);
 
