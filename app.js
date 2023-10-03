@@ -40,6 +40,7 @@ passport.use('login', new localStrategy({
 }, async(username,password, done) => {
   try{
     let user = await findUser(username,password);
+    console.log(user);
 
     if(user)
       return done(null,user,{message:'Logueado'});
@@ -443,6 +444,7 @@ router.post("/procesarOrdenOpenpay", async (req,res) => {
       //
       // }
   });
+  
 
 
   res.json({ "texto":"Exito", "customer_id": "", "orde_id":order.toObject()['id'],"openpay_id": req.body.txtKo  });
@@ -479,6 +481,41 @@ router.post("/procesarOrdenOpenpay", async (req,res) => {
   //     }
   //   );
   // });
+});
+
+
+const stripe = require('stripe')('sk_test_51NQx4iHaOLXFPK9c9stBbWV1J74ICRufkOAAzDoEXs1bALIYoDPTzK3ZVWBvjjlqfawxyobGcc1qRpUR9FRt4Ba500pv3TaOKi');
+
+router.get('/admin/prueba', async (req,res,next) => {
+  stripe.customers
+  .create({
+    email: 'juanantonio.martinez2003@gmail.com',
+  })
+  .then((customer) => {
+    // have access to the customer object
+    return stripe.invoiceItems
+      .create({
+        customer: customer.id, // set the customer id
+        amount: 2500, // 25
+        currency: 'MXN',
+        description: 'One-time setup fee',
+      })
+      .then((invoiceItem) => {
+        return stripe.invoices.create({
+          collection_method: 'send_invoice',
+          customer: invoiceItem.customer,
+          days_until_due: 10
+        });
+      })
+      .then((invoice) => {
+        // New invoice created on a new customer
+      })
+      .catch((err) => {
+        // Deal with an error
+      });
+  });
+
+  res.json({ "texto":"Exito"});
 });
 
 
